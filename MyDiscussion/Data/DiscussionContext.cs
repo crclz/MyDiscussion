@@ -13,6 +13,7 @@ namespace MyDiscussion.Data
         #region DbSets
 
         public DbSet<User> Users { get; private set; }
+        public DbSet<Article> Articles { get; private set; }
 
         #endregion
 

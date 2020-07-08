@@ -26,14 +26,17 @@ namespace MyDiscussion.Controllers
         [HttpPost]
         public ActionResult CreateUser([FromBody] CreateUserModel model)
         {
+            // 验证模型有效
             if (!ApiUtils.IsModelValid(model))
                 return BadRequest("ModelInvalid");
 
+            // 检查是否存在相同用户名的用户
             var userWithSameUsername = Context.Users.Where(p => p.Username == model.Username).FirstOrDefault();
 
             if (userWithSameUsername != null)
                 return BadRequest("UsernameExist");
 
+            // 创建用户对象
             var user = new User
             {
                 Username = model.Username,
@@ -42,8 +45,10 @@ namespace MyDiscussion.Controllers
                 Id = Guid.NewGuid()
             };
 
+            // 保存用户对象
             Context.Users.Add(user);
             Context.SaveChanges();
+
             return Ok();
         }
 

@@ -8,30 +8,31 @@ using System.Text;
 
 namespace MyDiscussion.Test
 {
-    class ContainerCreator
-    {
-        public static ContainerBuilder CreateBuilder()
-        {
-            var builder = new ContainerBuilder();
+	class ContainerCreator
+	{
+		public static ContainerBuilder CreateBuilder()
+		{
+			var builder = new ContainerBuilder();
 
-            builder.Register(
-                c => new DbContextOptionsBuilder().UseInMemoryDatabase("dbtest").Options
-                )
-                .InstancePerLifetimeScope();
+			builder.Register(
+				c => new DbContextOptionsBuilder().UseInMemoryDatabase("dbtest").Options
+				)
+				.InstancePerLifetimeScope();
 
-            builder.RegisterType<DiscussionContext>().InstancePerLifetimeScope();
-
-
-            // Controllers
-            builder.RegisterType<UsersController>().InstancePerLifetimeScope();
+			builder.RegisterType<DiscussionContext>().InstancePerLifetimeScope();
 
 
-            return builder;
-        }
+			// Controllers
+			builder.RegisterType<UsersController>().InstancePerLifetimeScope();
+			builder.RegisterType<ArticlesController>().InstancePerLifetimeScope();
 
-        public static IContainer CreateContainer()
-        {
-            return CreateBuilder().Build();
-        }
-    }
+
+			return builder;
+		}
+
+		public static IContainer CreateContainer()
+		{
+			return CreateBuilder().Build();
+		}
+	}
 }
