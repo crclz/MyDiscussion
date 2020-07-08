@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MyDiscussion.Controllers;
 using MyDiscussion.Data;
+using MyDiscussion.Test.Services;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -21,6 +22,8 @@ namespace MyDiscussion.Test
 
 			builder.RegisterType<DiscussionContext>().InstancePerLifetimeScope();
 
+			// Services
+			builder.RegisterType<FakeLoginStatus>().AsSelf().AsImplementedInterfaces().InstancePerLifetimeScope();
 
 			// Controllers
 			builder.RegisterType<UsersController>().InstancePerLifetimeScope();

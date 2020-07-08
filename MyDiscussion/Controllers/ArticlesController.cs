@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyDiscussion.Core;
 using MyDiscussion.Data;
 using MyDiscussion.Data.Models;
 
@@ -15,47 +16,54 @@ namespace MyDiscussion.Controllers
 	public class ArticlesController : ControllerBase
 	{
 		public DiscussionContext Context { get; }
+		public ILoginStatus LoginStatus { get; }
 
-		public ArticlesController(DiscussionContext context)
+		public ArticlesController(DiscussionContext context, ILoginStatus loginStatus)
 		{
 			Context = context;
+			LoginStatus = loginStatus;
 		}
 
-        [HttpPost]
-        public ActionResult CreateArticle([FromBody] CreateArticleModel model)
-        {
-            if (!ApiUtils.IsModelValid(model))
-                return BadRequest("模型无效");
+		[HttpPost]
+		public ActionResult CreateArticle([FromBody] CreateArticleModel model)
+		{
+			if (!ApiUtils.IsModelValid(model))
+				return BadRequest("模型无效");
 
-            // 创建用户对象
-            var article = new Article
-            {
-                Id = Guid.NewGuid(),
-                Title=model.Title,
-                Text=model.Text,
-                ThumbCount=0,
-                UserId=Guid.NewGuid() //假的
-            };
+			if (!LoginStatus.IsLoggedIn)
+			{
+				return Unauthorized();
+			}
 
-            // 保存用户对象
-            Context.Articles.Add(article);
-            Context.SaveChanges();
+			// 创建用户对象
+			var article = new Article
+			{
+				Id = Guid.NewGuid(),
+				Title = model.Title,
+				Text = model.Text,
+				ThumbCount = 0,
+				UserId = Guid.NewGuid() //假的
+			};
 
-            return Ok();
-        }
+			// 保存用户对象
+			Context.Articles.Add(article);
+			Context.SaveChanges();
 
-        public class CreateArticleModel
-        {
-            [Required]
-            [MinLength(3)]
-            [MaxLength(255)]
-            public string Title { get; set; }
+			return Ok();
+		}
 
-            [Required]
-            [MinLength(6)]
-            [MaxLength(4096)]
-            public string Text { get; set; }
-            
-        }
-    }
+		public class CreateArticleModel
+		{
+			[Required]
+			[MinLength(3)]
+			[MaxLength(255)]
+			public string Title { get; set; }
+
+			[Required]
+			[MinLength(6)]
+			[MaxLength(4096)]
+			public string Text { get; set; }
+
+		}
+	}
 }

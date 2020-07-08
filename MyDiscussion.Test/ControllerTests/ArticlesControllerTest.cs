@@ -30,5 +30,25 @@ namespace MyDiscussion.Test.ControllerTests
 			var badResult = Assert.IsType<BadRequestObjectResult>(result);
 			Assert.Equal("模型无效", badResult.Value);
 		}
+
+		[Fact]
+		void CreateArticle_returns_unauthorized_when_not_login()
+		{
+			// Arrange
+			var container = ContainerCreator.CreateContainer();
+			var scope = container.BeginLifetimeScope();
+
+			var controller = scope.Resolve<ArticlesController>();
+
+			// Act
+			var result = controller.CreateArticle(new ArticlesController.CreateArticleModel
+			{
+				Title = "title23213",
+				Text = "asdasdasdasdasd"
+			});
+
+			// Assert
+			Assert.IsType<UnauthorizedResult>(result);
+		}
 	}
 }
