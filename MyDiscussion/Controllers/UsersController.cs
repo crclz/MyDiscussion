@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyDiscussion.Data;
+using MyDiscussion.Data.Models;
 
 namespace MyDiscussion.Controllers
 {
@@ -12,22 +14,43 @@ namespace MyDiscussion.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        public UsersController()
-        {
+        public DiscussionContext Context { get; }
 
+        public UsersController(DiscussionContext context)
+        {
+            Context = context;
         }
+
 
         // POST example.com/api/Users
         [HttpPost]
-        public ActionResult<Guid> CreateUser([FromBody] CreateUserModel model)
+        public ActionResult CreateUser([FromBody] CreateUserModel model)
         {
-            throw new NotImplementedException();
+            if (!ApiUtils.IsModelValid(model))
+                return BadRequest("ModelInvalid");
+
+            var userWithSameUsername = Context.Users.Where(p => p.Username == model.Username).FirstOrDefault();
+
+            if (userWithSameUsername != null)
+                return BadRequest("UsernameExist");
+
+            var user = new User
+            {
+                Username = model.Username,
+                Password = model.Password,
+                Nickname = model.Nickname,
+                Id = Guid.NewGuid()
+            };
+
+            Context.Users.Add(user);
+            Context.SaveChanges();
+            return Ok();
         }
 
         public class CreateUserModel
         {
             [Required]
-            [MinLength(4)]
+            [MinLength(3)]
             [MaxLength(16)]
             public string Username { get; set; }
 

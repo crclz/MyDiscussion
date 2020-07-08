@@ -10,11 +10,12 @@ namespace MyDiscussion.Data
 {
     public class DiscussionContext : DbContext
     {
-        #region Sets
+        #region DbSets
 
         public DbSet<User> Users { get; private set; }
 
         #endregion
+
 
         public DiscussionContext(DbContextOptions options) : base(options)
         {
