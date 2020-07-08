@@ -42,14 +42,14 @@ namespace MyDiscussion.Controllers
 				Title = model.Title,
 				Text = model.Text,
 				ThumbCount = 0,
-				UserId = Guid.NewGuid() //假的
+				UserId = LoginStatus.UserId //
 			};
 
 			// 保存用户对象
 			Context.Articles.Add(article);
 			Context.SaveChanges();
 
-			return Ok();
+			return Ok(article.Id);
 		}
 
 		public class CreateArticleModel
