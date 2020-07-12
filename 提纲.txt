@@ -1,0 +1,24 @@
+200 OK
+
+401 returns_unauthorized_when_not_login
+404 returns_notfound_when_article_not_exist
+403 returns_forbidden_when_article_not_belong_to_current_user
+400 其他
+
+5xx 服务器问题（不用）
+
+================================
+TDD Test Driven Design
+1 分解任务，得到测试列表
+2 写测试
+3 写生产代码，直到通过测试
+4 循环23，直到测试列表所有测试完成、生产代码通过验证
+5 重构（最后通过测试来验证重构是否破坏程序的正确性）
+
+================================
+
+Articles
+ [ok] POST (Create)
+ DELETE
+ PATCH (部分更新)
+ PUT (不太实用)

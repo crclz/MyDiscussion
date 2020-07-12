@@ -16,7 +16,7 @@ namespace MyDiscussion.Test
 			var builder = new ContainerBuilder();
 
 			builder.Register(
-				c => new DbContextOptionsBuilder().UseInMemoryDatabase("dbtest").Options
+				c => new DbContextOptionsBuilder().UseInMemoryDatabase($"db-{Guid.NewGuid()}").Options
 				)
 				.InstancePerLifetimeScope();
 
